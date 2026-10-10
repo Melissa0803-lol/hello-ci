@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Semgrep
+      run: python -m pip install semgrep
+
+    - name: Check Semgrep
+      run: semgrep --version
+
+    - name: SAST
+      run: semgrep --config auto .
+
+  build:
+   needs: sast
+   runs-on: ubuntu-latest
+
+   steps:
+     - name: Build
+       run: echo "Building"
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test
+        run: echo "Testing"
